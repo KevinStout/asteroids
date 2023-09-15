@@ -1,19 +1,21 @@
-let canvas;
-let ctx;
+// Note to use this file you will need to run it through a transpiler.
+
+let canvas: HTMLCanvasElement;
+let ctx: CanvasRenderingContext2D;
 let canvasWidth = 1400;
 let canvasHeight = 800;
-let keys = [];
-let ship;
-let bullets = [];
-let asteroids = [];
+let keys: { [key: string]: boolean } = {};
+let ship: Ship;
+let bullets: Bullet[] = [];
+let asteroids: Asteroid[] = [];
 let score = 0;
 let lives = 3;
 
 document.addEventListener("DOMContentLoaded", SetupCanvas);
 
 function SetupCanvas() {
-  canvas = document.getElementById("my-canvas");
-  ctx = canvas.getContext("2d");
+  canvas = document.getElementById("my-canvas") as HTMLCanvasElement;
+  ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
   canvas.width = canvasWidth;
   canvas.height = canvasHeight;
   ctx.fillStyle = "black";
@@ -37,6 +39,21 @@ function SetupCanvas() {
 }
 
 class Ship {
+  visible: boolean;
+  x: number;
+  y: number;
+  movingForward: boolean;
+  speed: number;
+  velX: number;
+  velY: number;
+  rotateSpeed: number;
+  radius: number;
+  collisionRadius: number;
+  angle: number;
+  strokeColor: string;
+  noseX: number;
+  noseY: number;
+
   constructor() {
     this.visible = true;
     this.x = canvasWidth / 2;
@@ -54,7 +71,7 @@ class Ship {
     this.noseY = canvasHeight / 2;
   }
 
-  Rotate(dir) {
+  Rotate(dir: number) {
     this.angle += this.rotateSpeed * dir;
   }
 
@@ -99,7 +116,17 @@ class Ship {
 }
 
 class Bullet {
-  constructor(angle) {
+  visible: boolean;
+  x: number;
+  y: number;
+  angle: number;
+  height: number;
+  width: number;
+  speed: number;
+  velX: number;
+  velY: number;
+
+  constructor(angle: number) {
     this.visible = true;
     this.x = ship.noseX;
     this.y = ship.noseY;
@@ -124,7 +151,17 @@ class Bullet {
 }
 
 class Asteroid {
-  constructor(x, y, radius, level, collisionRadius) {
+  visible: boolean;
+  x: number;
+  y: number;
+  speed: number;
+  radius: number;
+  angle: number;
+  strokeColor: string;
+  collisionRadius: number;
+  level: number;
+
+  constructor(x?: number, y?: number, radius?: number, level?: number, collisionRadius?: number) {
     this.visible = true;
     this.x = x || Math.floor(Math.random() * canvasWidth);
     this.y = y || Math.floor(Math.random() * canvasHeight);
@@ -166,7 +203,7 @@ class Asteroid {
   }
 }
 
-function CircleCollision(p1x, p1y, r1, p2x, p2y, r2) {
+function CircleCollision(p1x: number, p1y: number, r1: number, p2x: number, p2y: number, r2: number) {
   let radiusSum;
   let xDiff;
   let yDiff;
@@ -183,7 +220,7 @@ function CircleCollision(p1x, p1y, r1, p2x, p2y, r2) {
 function DrawLifeShips() {
   let startX = 1350;
   let startY = 10;
-  let points = [
+  let points: [number, number][] = [
     [9, 9],
     [-9, 9],
   ];
